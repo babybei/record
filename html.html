@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<script src="./js/jquery2.1.4.min.js"></script>
+
+	<script type="text/javascript" src="js/ly.js"></script>
+</head>
+<body>
+
+	<span style="white-space:pre">        </span><audio controls autoplay></audio>  
+	<input type="button" value="开始录音" id="recording" />  
+	<input type="button" value="获取录音" id="retry"/>  
+	<input type="button" value="停止录音" id="stop" />  
+	<input type="button" value="播放录音" id="play" /> 
+	<input type="button" value="提交" id="submit">
+	<input type="hidden" id="url" value="https://up.qbox.me">
+	<input type="hidden" id="token" value="__J8wgBO2iI4FR-tO3e2RhD-2aFKZT3uMk4Sl8XJ:tIRWPF4QxuVk-C7JCo3uPnnnz8M=:eyJzY29wZSI6Imt5dy1yZWNvcmQtbXAzLTAwMSIsImRlYWRsaW5lIjoxNDc0NjAxMDAyfQ==">
+	<input type="hidden" id="key" value="201609231023.wav">
+</body>
+<script>
+		/* 音频 */  
+		var recorder;  
+		var audio = document.querySelector('audio');  
+
+		$('#recording').click(function(){
+			HZRecorder.get(function (rec) {  
+				recorder = rec;  
+				recorder.start();  
+			})
+		})
+		$('#retry').click(function(){
+			var record = recorder.getBlob();  
+			debugger;  
+		});
+		$('#stop').click(function(){
+			recorder.stop();
+		})
+		$('#play').click(function(){
+			recorder.play(audio); 
+		});
+		$('#submit').click(function(){
+			debugger;
+            var url = $("#url").val()
+              , token = $("#token").val()
+              , key = $("#key").val()
+              , _data = {
+                token: token,
+                key: key
+            };
+			recorder.upload(url,_data, function (state, e) {
+				debugger
+				switch (state) {
+					case 'uploading':
+					var percentComplete = Math.round(e.loaded * 100 / e.total) + '%';
+					break;
+					case 'ok':
+					debugger;
+					alert(e.target.responseText);
+					alert('上传成功');
+					break;
+					case 'error':
+					alert('上传失败');
+					break;
+					case 'cancel':
+					alert('上传被取消');
+					break;
+				}
+			});
+		})
+	</script>
+	</html>
